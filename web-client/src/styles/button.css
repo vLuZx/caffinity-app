@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@layer components {
+		.btn-solid {
+				@apply px-4 py-2 rounded-md font-medium border ;
+
+				background-color: var(--btn-bg);
+				color: var(--btn-fg);
+				border-color: color-mix(in oklab, var(--btn-bg), black 15%);
+				font-size: var(--text-size-main);
+				font-family: var(--font-inter);
+		}
+
+		.btn-solid:hover {
+				@apply cursor-pointer ;
+				background-color: color-mix(in oklab, var(--btn-bg), black 3%);
+		}
+
+		@media (prefers-color-scheme: dark) {
+				.btn-solid {
+						border-color: color-mix(in oklab, var(--btn-bg), white 15%);
+						color: var(--btn-fg);
+				}
+
+				.btn-solid:hover {
+						@apply cursor-pointer ;
+						background-color: color-mix(in oklab, var(--btn-bg), white 5%);
+				}
+		}
+
+}
