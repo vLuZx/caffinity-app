@@ -1,24 +1,60 @@
 import Button from "@/components/button";
+import { AuthDivider, AuthForm, AuthSocialButtons } from "@/components/authform";
 import TextField from "@/components/textfield";
 import { useState } from "react";
-import "../styles/authform.css";
+import { APP } from "@/config/app";
 
 export default function LoginPage() {
-
-    const [email, setEmail] = useState("");
+    const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSubmit = () => {
-        // Handle login logic here
+        // handle login logic here
     };
 
     return (
-        <form className="w-auth-form max-w-100 justify-center items-center content-center" onSubmit={handleSubmit}>
-            <TextField label="Email" value={email} onChange={setEmail} />
-            <TextField label="Password" type="password" value={password} onChange={setPassword} />
-            <Button>
-                Sign in
-            </Button>
-        </form>
+        <div className="w-full min-h-screen flex items-center justify-center">
+            <AuthForm
+                className="max-w-105 space-y-4"
+                onSubmit={handleSubmit}
+                title={<>Sign in to {APP.name}</>}
+            >
+
+                <TextField
+                    leftLabelText="Username or email address"
+                    value={emailOrUsername}
+                    onChange={setEmailOrUsername}
+                />
+
+                <TextField
+                    leftLabelText="Password"
+                    rightLabelNode={
+                        <Button variant="text-only" to="/forgot-password" className="text-sm font-medium">
+                            Forgot password?
+                        </Button>
+                    }
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                />
+
+                <Button stretch>Sign in</Button>
+
+                <AuthDivider />
+
+                <AuthSocialButtons
+                    googleLabel="Continue with Google"
+                    appleLabel="Continue with Apple"
+                    buttonClassName="py-3"
+                />
+
+                <div className="flex justify-center pt-2">
+                    <p className="text-sm">New to {APP.name}?&nbsp;</p>
+                    <Button variant="text-only" to="/register" className="text-sm">
+                        Create an account
+                    </Button>
+                </div>
+            </AuthForm>
+        </div>
     );
 }

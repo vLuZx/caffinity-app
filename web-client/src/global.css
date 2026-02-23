@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    --font-arimo: "Arimo", "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-inter: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-nunito: "Nunito", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-ubuntu: "Ubuntu", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+@colors {
+    bg: "rgb(var(--background) / <alpha-value>)";
+    fg: "rgb(var(--foreground) / <alpha-value>)";
+    error: "rgb(var(--error) / <alpha-value)";
+}
+
+:root {
+    color-scheme: light;
+
+    --background: #f1e7de;
+    --foreground: #f9f2eb;
+
+    --opposite-background: #1d1b1f;
+    --opposite-foreground: #231C07;
+
+    --border-muted: rgb(181, 168, 157);
+
+    --primary-accent: #9C6644;
+    --secondary-accent: #7F5539;
+    --light-base: #dbbb9b;
+    --error: #d85c5c;
+
+    --text-default: rgb(28, 28, 28);
+    --text-muted: rgb(74, 74, 74);
+    --text-dark: rgb(28, 28, 28);
+
+    @apply bg-(--background);
+}
+
+:root {
+    @media (prefers-color-scheme: dark) {
+        --background: #1d1b1f;
+        --foreground: #231C07;
+        
+        --opposite-background: #f1e7de;
+        --opposite-foreground: #f9f2eb;
+
+        --border-muted: rgb(68, 68, 68);
+        --secondary-accent: #9C6644;
+
+        --text-default: rgb(255, 255, 255);
+        --text-muted: rgb(186, 186, 186);
+    }
+
+    @apply bg-(--background);
+}
+
+@layer utilities {
+    .text-base { font-size: 0.95rem; line-height: 1.5rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-xs { font-size: 0.75rem; line-height: 1.5rem; }
+}
+
+
+body {
+    @apply m-0 text-(--text-default);
+    font-family: -apple-system, BlinkMacSystemFont, var(--font-inter), sans-serif;
+    font-size: var(--text-size-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@import "./styles/button.css";
+@import "./styles/textfield.css";
+@import "./styles/authform.css";

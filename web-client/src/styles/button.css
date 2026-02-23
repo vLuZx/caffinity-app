@@ -1,31 +1,52 @@
-@import "tailwindcss";
+@reference "tailwindcss";
 
 @layer components {
-		.btn-solid {
-				@apply px-4 py-2 rounded-md font-medium border ;
 
-				background-color: var(--btn-bg);
-				color: var(--btn-fg);
-				border-color: color-mix(in oklab, var(--btn-bg), black 15%);
-				font-size: var(--text-size-main);
-				font-family: var(--font-inter);
+	.btn-solid {
+		@apply px-4 py-3.5 rounded-md border text-base;
+  		line-height: 1; 
+		background-color: var(--btn-bg);
+		color: var(--btn-fg);
+		border-color: color-mix(in oklab, var(--btn-bg), black 20%);
+		font-family: var(--font-inter);
+	}
+
+	.btn-solid:hover {
+		@apply cursor-pointer brightness-95 ;
+	}
+
+	.btn-solid:active {
+		@apply scale-98 transition-transform duration-100 ;
+	}
+
+	@media (prefers-color-scheme: dark) {
+
+		.btn-solid {
+			border-color: color-mix(in oklab, var(--btn-bg), white 20%);
+			color: var(--btn-fg);
 		}
 
 		.btn-solid:hover {
-				@apply cursor-pointer ;
-				background-color: color-mix(in oklab, var(--btn-bg), black 3%);
+			@apply cursor-pointer brightness-105 ;
 		}
 
-		@media (prefers-color-scheme: dark) {
-				.btn-solid {
-						border-color: color-mix(in oklab, var(--btn-bg), white 15%);
-						color: var(--btn-fg);
-				}
+	}
+}
 
-				.btn-solid:hover {
-						@apply cursor-pointer ;
-						background-color: color-mix(in oklab, var(--btn-bg), white 5%);
-				}
-		}
+.btn-text-only {
+	font-family: var(--font-inter);
+	font-weight: 400;
+	color: var(--secondary-accent);
+}
+
+.btn-text-only:hover {
+	@apply underline cursor-pointer brightness-75;
+}
+
+@media (prefers-color-scheme: dark) {
+
+	.btn-text-only:hover {
+		@apply brightness-125 ;
+	}
 
 }
