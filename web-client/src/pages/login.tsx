@@ -3,13 +3,25 @@ import { AuthDivider, AuthForm, AuthSocialButtons } from "@/components/authform"
 import TextField from "@/components/textfield";
 import { useState } from "react";
 import { APP } from "@/config/app";
+import { useLogin } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
+    const loginMutation = useLogin();
+    
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = () => {
-        // handle login logic here
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!emailOrUsername.trim() || !password.trim()) {
+            return;
+        }
+
+        loginMutation.mutate({
+            emailOrUsername,
+            password,
+        });
     };
 
     return (
@@ -24,6 +36,7 @@ export default function LoginPage() {
                     leftLabelText="Username or email address"
                     value={emailOrUsername}
                     onChange={setEmailOrUsername}
+                    required
                 />
 
                 <TextField
@@ -36,9 +49,12 @@ export default function LoginPage() {
                     type="password"
                     value={password}
                     onChange={setPassword}
+                    required
                 />
 
-                <Button stretch>Sign in</Button>
+                <Button stretch type="submit" isDisabled={loginMutation.isPending || !emailOrUsername.trim() || !password.trim()}>
+                    {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
+                </Button>
 
                 <AuthDivider />
 
