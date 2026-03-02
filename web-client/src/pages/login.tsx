@@ -19,7 +19,7 @@ export default function LoginPage() {
         }
 
         loginMutation.mutate({
-            emailOrUsername,
+            emailOrUsername: emailOrUsername.toLowerCase(),
             password,
         });
     };

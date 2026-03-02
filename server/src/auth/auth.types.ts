@@ -1,11 +1,9 @@
-import { DefaultRoles } from "../roles/roles.types";
+import { UserId } from "../common/types/branded.types";
 
 export type JwtPayload = {
     sub: string;
-    role: DefaultRoles;
 };
 
 export type AuthenticatedUser = {
-    userId: string;
-    role: DefaultRoles;
+    userId: UserId;
 };

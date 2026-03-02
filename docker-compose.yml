@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zch
+      POSTGRES_DB: caffinity-app
+    ports:
+      - "5431:5431"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:zch@db:5431/caffinity-app?schema=public
+      JWT_SECRET: zq{pLU2sBy4t;1Zk,FPoKS[?Cq$%{L?)?.g<P<P],QknJa/FnZE^nIFOaihFQS,00Yq7N8hFSgRW{Ul5*V.m18
+      NODE_ENV: production
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: .
+      dockerfile: web-client/Dockerfile
+    ports:
+      - "5173:80"   # open http://localhost:5173
+    depends_on:
+      - api
+
+  migrate:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: builder
+    environment:
+      DATABASE_URL: postgresql://postgres:zch@db:5431/caffinity-app?schema=public
+    depends_on:
+      - db
+    command: ["pnpm", "prisma", "migrate", "deploy"]
+
+volumes:
+  pgdata:

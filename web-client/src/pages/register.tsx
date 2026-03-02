@@ -25,8 +25,8 @@ export default function RegisterPage() {
 		}
 
 		registerMutation.mutate({
-			email,
-			username,
+			email: email.toLowerCase(),
+			username: username.toLowerCase(),
 			password,
 		});
 	};

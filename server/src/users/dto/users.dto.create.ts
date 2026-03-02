@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
 
 export class CreateUserDto {
     
@@ -6,10 +6,15 @@ export class CreateUserDto {
     @IsString()
     @MinLength(3)
     @MaxLength(16)
+    @IsLowercase()
+    @Matches(/^[a-zA-Z0-9]*$/, {
+        message: "Username must contain only alphanumeric characters.",
+    })
     username: string;
 
     @IsNotEmpty()
     @IsEmail()
+    @IsLowercase()
     email: string;
 
     @IsNotEmpty()
