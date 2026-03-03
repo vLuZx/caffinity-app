@@ -28,14 +28,29 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
-    onSuccess: (data) => {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('userId', data.user.id);
-      
+    onSuccess: () => {
+      // No need to store anything - the httpOnly cookie is set by the server!
+      // Just navigate to the home page
       navigate({ to: '/' });
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.error('Login failed:', error.response?.data);
+    },
+  });
+};
+
+export const useLogout = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () => authApi.logout(),
+    onSuccess: () => {
+      // Cookie is cleared by the server
+      // Just navigate to login page
+      navigate({ to: '/login' });
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      console.error('Logout failed:', error.response?.data);
     },
   });
 };

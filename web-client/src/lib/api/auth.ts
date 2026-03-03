@@ -18,12 +18,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  authenticated: boolean;
+}
+
+export interface LogoutResponse {
+  authenticated: boolean;
 }
 
 export const authApi = {
@@ -34,6 +33,11 @@ export const authApi = {
 
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<LoginResponse>('/auth/login', data);
+    return response.data;
+  },
+
+  logout: async (): Promise<LogoutResponse> => {
+    const response = await apiClient.post<LogoutResponse>('/auth/logout');
     return response.data;
   },
 };

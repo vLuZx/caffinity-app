@@ -4,34 +4,24 @@ import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-    constructor(private jwtService: JwtService, private reflector: Reflector) {}
+	constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
-    async canActivate(context: ExecutionContext): Promise<boolean> {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		// Check if route has isPublic metadata, assigned through @Public() decorator
+		const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
+			context.getHandler(),
+			context.getClass(),
+		]);
+		if (isPublic) return true;
 
-        // Check if route has isPublic metadata, assigned through @Public() decorator
-        const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (isPublic) return true;
-
-        // Checks for authentication token
-        const request = context.switchToHttp().getRequest();
-        const token = request.cookies?.access_token;
-
-        if (!token) {
-            throw new UnauthorizedException("Missing Token.");
-        }
-        
-        // Verifies authentication token, grants access if 
-        // the token is valid, otherwise throws an error
-        try {
-            const payload = await this.jwtService.verifyAsync(token);
-            request.userId = payload.userId;
-            return true;
-        } catch (error) {
-            console.log(error);
-            throw new UnauthorizedException("Invalid Token.");
-        }
-    }
+		// Checks for authentication token
+		const request = context.switchToHttp().getRequest();
+		const token = request.cookies?.access_token;
+		
+		// Verifies authentication token, grants access if 
+		// the token is valid, otherwise throws an error
+		const payload = await this.jwtService.verifyAsync(token);
+		request.userId = payload.userId;
+		return true;
+	}
 }

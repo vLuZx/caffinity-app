@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { CreateUserDto } from './dto/users.dto.create';
+import { RegisterUserDto } from '../auth/dto/register.dto';
 import { UserId } from '../common/types/branded.types';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -46,19 +46,43 @@ export class UsersRepository {
         return user?.username ?? null;
     }
 
-    // ===== Creation ===== //
-
-    async create(userData: CreateUserDto): Promise<User> {
+    async create(userData: RegisterUserDto): Promise<User> {
         return await this.prisma.user.create({
             data: {
                 username: userData.username,
                 email: userData.email,
-                password: userData.password
+                password: userData.password,
+                accountCreatedAt: new Date(),
+                accountLastUpdatedAt: new Date()
             }
         });
     }
 
-    // ===== Existence Checks ===== //
+    async updateRefreshToken(
+        userId: UserId,
+        hashedRefreshToken: string,
+        expiresAt: Date
+    ): Promise<void> {
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                refreshToken: hashedRefreshToken,
+                refreshTokenCreatedAt: new Date(),
+                refreshTokenExpiresAt: expiresAt,
+            }
+        });
+    }
+
+    async clearRefreshToken(userId: UserId): Promise<void> {
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                refreshToken: undefined,
+                refreshTokenCreatedAt: undefined,
+                refreshTokenExpiresAt: undefined,
+            }
+        });
+    }
 
     async existsByEmail(email: string): Promise<boolean> {
         const count = await this.prisma.user.count({

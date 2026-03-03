@@ -1,6 +1,6 @@
 import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
 
-export class CreateUserDto {
+export class RegisterUserDto {
     
     @IsNotEmpty()
     @IsString()
@@ -25,6 +25,9 @@ export class CreateUserDto {
         message: "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
     })
     password: string;
+
+    refreshToken?: string;
+    refreshTokenExpiresAt?: Date;
 
     constructor(username: string, email: string, password: string) {
         this.username = username;

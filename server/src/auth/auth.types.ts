@@ -1,9 +1,9 @@
 import { UserId } from "../common/types/branded.types";
 
 export type JwtPayload = {
-    sub: string;
+	sub: string;
 };
 
 export type AuthenticatedUser = {
-    userId: UserId;
+	userId: UserId;
 };
