@@ -9,6 +9,19 @@ export const apiClient = axios.create({
 	withCredentials: true,
 });
 
+apiClient.interceptors.request.use((config) => {
+    const csrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+    
+    if (csrfToken) {
+        config.headers['X-XSRF-TOKEN'] = csrfToken;
+    }
+    
+    return config;
+});
+
 apiClient.interceptors.response.use(
 	(response) => response,
 	(error) => {

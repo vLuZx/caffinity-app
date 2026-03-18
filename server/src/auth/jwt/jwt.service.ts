@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { bcrypt } from 'bcrypt';
+import * as bcrypt from "bcrypt";
+import { UserId } from '../../common/types/branded.types';
 
 export interface TokenPayload {
 	sub: string;
-	userId: string;
 	type: 'access' | 'refresh';
 }
 
@@ -29,7 +29,7 @@ export class TokenService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async generateTokenPair(userId: string): Promise<TokenPair> {
+	async generateTokenPair(userId: UserId): Promise<TokenPair> {
 		const accessToken = await this.generateAccessToken(userId);
 		const refreshToken = await this.generateRefreshToken(userId);
 
@@ -39,7 +39,6 @@ export class TokenService {
 	async generateAccessToken(userId: string): Promise<string> {
 		const payload: TokenPayload = {
 			sub: userId,
-			userId,
 			type: 'access',
 		};
 
@@ -48,10 +47,9 @@ export class TokenService {
 		});
 	}
 
-	async generateRefreshToken(userId: string): Promise<string> {
+	async generateRefreshToken(userId: UserId): Promise<string> {
 		const payload: TokenPayload = {
 			sub: userId,
-			userId,
 			type: 'refresh',
 		};
 
@@ -60,7 +58,7 @@ export class TokenService {
 		});
 	}
 
-	async generateRefreshTokenData(userId: string): Promise<RefreshTokenData> {
+	async generateRefreshTokenData(userId: UserId): Promise<RefreshTokenData> {
 		const refreshToken = await this.generateRefreshToken(userId);
 		const hashedToken = await this.hashToken(refreshToken);
 		const expiresAt = new Date(Date.now() + this.REFRESH_TOKEN_EXPIRY_MS);
@@ -82,8 +80,7 @@ export class TokenService {
 	}
 
 	async verifyHashedToken(token: string, hashedToken: string): Promise<boolean> {
-		const tokenHash = await this.hashToken(token);
-		return tokenHash === hashedToken;
+		return await bcrypt.compare(token, hashedToken);
 	}
 
 	getRefreshTokenExpiration(): Date {

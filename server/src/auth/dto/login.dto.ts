@@ -11,7 +11,7 @@ export class LoginDto {
     password: string;
 
     constructor(emailOrUsername: string, password: string) {
-        this.emailOrUsername = emailOrUsername;
+        this.emailOrUsername = emailOrUsername?.toLowerCase();
         this.password = password;
     }
 }

@@ -1,7 +1,6 @@
-import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class RegisterUserDto {
-    
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
@@ -26,12 +25,19 @@ export class RegisterUserDto {
     })
     password: string;
 
-    refreshToken?: string;
-    refreshTokenExpiresAt?: Date;
-
     constructor(username: string, email: string, password: string) {
-        this.username = username;
-        this.email = email;
+        this.username = username.toLowerCase();
+        this.email = email.toLowerCase();
         this.password = password;
     }
+}
+
+// Internal type used when creating users in the repository/service. Keeps validation DTO clean
+// and prevents ValidationPipe from treating internal fields as non-whitelisted.
+export interface CreateUserData {
+    username: string;
+    email: string;
+    password: string;
+    refreshToken?: string | null;
+    refreshTokenExpiresAt?: Date | null;
 }

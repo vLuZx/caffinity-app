@@ -21,20 +21,19 @@ export class AuthController {
 	@Post('/login')
 	@UsePipes(new ValidationPipe({ transform: true, whitelist: true}))
 	async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
-		const { accessToken, refreshToken } = await this.authService.login(loginDto.emailOrUsername, loginDto.password);
+		const { tokenPair } = await this.authService.login(loginDto.emailOrUsername, loginDto.password);
 		const isProd = process.env.NODE_ENV === 'production';
 
-		res.cookie('access_token', accessToken, {
+		res.cookie('access_token', tokenPair.accessToken, {
 			httpOnly: true,
 			secure: isProd,
 			maxAge: 15 * 60 * 1000,
 			sameSite: 'lax'
 		});
-		res.cookie('refresh_token', refreshToken, {
+		res.cookie('refresh_token', tokenPair.refreshToken, {
 			httpOnly: true,
 			secure: isProd,
 			sameSite: 'lax',
-			path: '/auth/refresh',
 			maxAge: 1000 * 60 * 60 * 24 * 30, 
 		});
 
@@ -44,7 +43,7 @@ export class AuthController {
 	@Post('/logout')
 	async logout(@Res({ passthrough: true }) res: Response) {
 		res.clearCookie('access_token');
-		res.clearCookie('refresh_token', { path: '/auth/refresh' });
+		res.clearCookie('refresh_token');
 		return { authenticated: false };
 	}
 

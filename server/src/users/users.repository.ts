@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { RegisterUserDto } from '../auth/dto/register.dto';
+import { CreateUserData } from '../auth/dto/register.dto';
 import { UserId } from '../common/types/branded.types';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -46,14 +46,17 @@ export class UsersRepository {
         return user?.username ?? null;
     }
 
-    async create(userData: RegisterUserDto): Promise<User> {
+    async create(userData: CreateUserData): Promise<User> {
         return await this.prisma.user.create({
             data: {
                 username: userData.username,
                 email: userData.email,
                 password: userData.password,
                 accountCreatedAt: new Date(),
-                accountLastUpdatedAt: new Date()
+                accountLastUpdatedAt: new Date(),
+                refreshToken: userData.refreshToken ?? undefined,
+                refreshTokenCreatedAt: userData.refreshToken ? new Date() : undefined,
+                refreshTokenExpiresAt: userData.refreshTokenExpiresAt ?? undefined,
             }
         });
     }
